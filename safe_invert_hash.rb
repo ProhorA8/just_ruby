@@ -1,8 +1,8 @@
 # Сделан возможным safe_invert для Хэша
 fruits_country = {
-  'orange' => 'Marocco',
-  'banana' => 'Ecuador',
-  'lemon' => 'Marocco'
+  'orange': 'Marocco',
+  'banana': 'Ecuador',
+  'lemon': 'Marocco'
 }
 
 # создадим собственный метод
