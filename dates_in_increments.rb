@@ -24,22 +24,43 @@ def invalid_date(date)
 end
 
 # возвращает дату с заданым шагом
-def subsequent_dates(date, unit, step)
-  string_date = valid_date(date)
+def subsequent_dates
+  # инициализируем счётчик шага
+  step_counter = 0
 
-  if unit == 'day'
-    Date.parse(string_date).next_day step
-  elsif unit == 'month'
-    Date.parse(string_date).next_month step
-  else
-    Date.parse(string_date).next_year step
+  lambda do |step, hash|
+    # получаем единицу измерения строкой
+    unit = hash.keys[0].to_s
+    # получуем параметры лямбды в виде массива
+    array_params = hash[hash.keys[0]].call
+    # получаем валидную дату для создания объекта даты
+    string_date = valid_date(array_params[0])
+
+    # увеличиваем счётчик с заданным интервалом
+    step_counter += step
+    if unit == 'day'
+      Date.parse(string_date).next_day step_counter
+    elsif unit == 'month'
+      Date.parse(string_date).next_month step_counter
+    else
+      Date.parse(string_date).next_year step_counter
+    end
   end
 end
 
-maximum_duration = (count_subsequent_dates - 1) * input_step
+counter = 0
+step = 0
+
+# создаём хэш, где единица измерения полученная от пользователя – ключ, массив параметров полученных от пользователя – значение
+hash = { "#{input_measurements}": lambda { [input_date, input_step, count_subsequent_dates] }}
 
 # выводим даты в необходимом формате, нужное колличество раз
-0.step(maximum_duration, input_step) do |step|
-  string_date = invalid_date subsequent_dates(input_date, input_measurements, step)
+while counter < count_subsequent_dates
+  counter += 1
+  
+  # вызов лямбды в методе с передачей ей шага и хэша значений
+  date = subsequent_dates.call(step, hash)
+  string_date = invalid_date(date)
   print string_date, ' '
+  step += input_step
 end
