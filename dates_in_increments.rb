@@ -1,5 +1,8 @@
 # С клавиатуры вводится:
-# дата, единицы измерения(день, месяц, год) и длительность (целочисленное значение)
+#   – дата
+#   – единицы измерения(день, месяц, год)
+#   – длительность (целочисленное значение)
+#   – N последующих дат (целочисленное значение)
 # Выводится нужное N последующих дат
 require 'date'
 
@@ -11,7 +14,7 @@ input_measurements = gets.chomp
 puts 'Введите длительность – шаг (целочисленное значение):'
 input_step = gets.to_i
 puts 'Введите N последующих дат (целочисленное значение):'
-count_subsequent_dates = gets.to_i
+input_count_dates = gets.to_i
 
 # формируем валидную дату
 def valid_date(date)
@@ -38,6 +41,7 @@ def subsequent_dates
 
     # увеличиваем счётчик с заданным интервалом
     step_counter += step
+
     if unit == 'day'
       Date.parse(string_date).next_day step_counter
     elsif unit == 'month'
@@ -52,15 +56,16 @@ counter = 0
 step = 0
 
 # создаём хэш, где единица измерения полученная от пользователя – ключ, массив параметров полученных от пользователя – значение
-hash = { "#{input_measurements}": lambda { [input_date, input_step, count_subsequent_dates] }}
+hash = { "#{input_measurements}": lambda { [input_date, input_step, input_count_dates] }}
 
 # выводим даты в необходимом формате, нужное колличество раз
-while counter < count_subsequent_dates
+while counter < input_count_dates
   counter += 1
   
-  # вызов лямбды в методе с передачей ей шага и хэша значений
+  # вызов лямбды в методе с передачей ей шага и хэша
   date = subsequent_dates.call(step, hash)
   string_date = invalid_date(date)
-  print string_date, ' '
   step += input_step
+
+  print string_date, ' '
 end
